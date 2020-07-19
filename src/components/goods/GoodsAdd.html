@@ -1,0 +1,56 @@
+<div class="ft">
+  <!-- 步骤条 -->
+  <el-steps :active="activeIndex" finish-status="success">
+    <el-step title="第一步" description="基本信息"></el-step>
+    <el-step title="第二步" description="商品图片"></el-step>
+    <el-step title="第三步" description="商品内容"></el-step>
+  </el-steps>
+  <!-- 标签页 -->
+  <el-tabs @tab-click="clickTabs" v-model="activeName" tab-position="left">
+    <!-- 第一步 -->
+    <el-tab-pane name="one" label="基本信息">
+      <el-form :model="addGoodsForm" label-width="80px">
+        <el-form-item label="商品名称">
+          <el-input v-model="addGoodsForm.goods_name"></el-input>
+        </el-form-item>
+        <el-form-item label="商品价格">
+          <el-input v-model="addGoodsForm.goods_price"></el-input>
+        </el-form-item>
+        <el-form-item label="商品重量">
+          <el-input v-model="addGoodsForm.goods_weight"></el-input>
+        </el-form-item>
+        <el-form-item label="商品数量">
+          <el-input v-model="addGoodsForm.goods_number"></el-input>
+        </el-form-item>
+        <el-form-item label="商品分类">
+          <el-cascader v-model="addGoodsForm.goods_cat" :props="defaultProps" :options="options" clearable>
+          </el-cascader>
+        </el-form-item>
+        <el-form-item label="是否促销">
+          <!-- label 是收集数据 -->
+          <el-radio v-model="addGoodsForm.radio" :label="true">是</el-radio>
+          <el-radio v-model="addGoodsForm.radio" :label="false">否</el-radio>
+        </el-form-item>
+      </el-form>
+      <el-button @click="next(2,'two')" type="primary">下一步</el-button>
+    </el-tab-pane>
+    <!-- 第二步 -->
+    <el-tab-pane name="two" label="商品图片" class="parent">
+      <el-upload action="http://localhost:8888/api/private/v1/upload/" list-type="picture-card"
+        :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :headers="deafultHeader"
+        :on-success="uploadSuccess">
+        <i class="el-icon-plus"></i>
+      </el-upload>
+      <el-dialog :visible.sync="dialogVisible">
+        <img width="100%" :src="dialogImageUrl" alt="">
+      </el-dialog>
+      <el-button @click="next(3,'three')" type="primary">下一步</el-button>
+    </el-tab-pane>
+    <!-- 第三步 -->
+    <el-tab-pane name="three" label="商品内容">
+      <quill-editor v-model="addGoodsForm.goods_introduce" ref="myQuillEditor" class="fa2">
+      </quill-editor>
+      <el-button type="primary" @click="addGoods">确定</el-button>
+    </el-tab-pane>
+  </el-tabs>
+</div>

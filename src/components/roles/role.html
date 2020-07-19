@@ -1,0 +1,54 @@
+<div>
+  <!-- 角色列表 -->
+  <el-table :data="rolesData" highlight-current-row ref="singleTable" style="width: 100%">
+    <!-- 展开行开始 -->
+    <el-table-column type="expand">
+      <template slot-scope="scope">
+        <el-row v-for="item1 in scope.row.children" :key="item1.id" class="row1">
+          <el-col :span="4">
+            <el-tag closable>{{ item1.authName}}</el-tag>
+            <i class="el-icon-arrow-right"></i>
+          </el-col>
+          <el-col :span="20">
+            <el-row v-for="item2 in item1.children" :key="item2.id" class="row2">
+              <el-col :span="4">
+                <el-tag type="success" closable>{{ item2.authName}}</el-tag>
+                <i class="el-icon-arrow-right"></i>
+
+              </el-col>
+              <el-col :span="20">
+                <el-tag type="danger" v-for="(item3,index) in item2.children" :key="item3.id" class="tag" closable>
+                  {{item3.authName}}
+                </el-tag>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+      </template>
+    </el-table-column>
+    <!-- 展开行结束 -->
+    <el-table-column :index="caculateIndex" label="#" type="index">
+    </el-table-column>
+    <el-table-column label="角色名称" property="roleName"></el-table-column>
+    <el-table-column label="描述" property="roleDesc"></el-table-column>
+    <el-table-column label="操作">
+      <template slot-scope="scope">
+        <el-button @click="showEditUserDialog(scope.row)" icon="el-icon-edit" plain size="mini" type="primary">
+        </el-button>
+        <el-button @click="delUser(scope.row)" icon="el-icon-delete" plain size="mini" type="danger"></el-button>
+        <el-button icon="el-icon-check" plain size="mini" type="success" @click="shwoAssignRight(scope.row)">分配权限
+        </el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+  <!-- 分配权限 -->
+  <el-dialog title="角色授权" :visible.sync="dialogAssignRightVisible">
+    <el-tree :data="rightsData" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]"
+      :props="defaultProps" :default-expand-all="true" ref="tree">
+    </el-tree>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="dialogAssignRightVisible = false">取 消</el-button>
+      <el-button type="primary" @click="AssignRight">确 定</el-button>
+    </div>
+  </el-dialog>
+</div>
